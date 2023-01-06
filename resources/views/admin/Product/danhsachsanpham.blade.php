@@ -2,13 +2,19 @@
 @section('content')
 <div id="page-wrapper">
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Sản phẩm
                     <small>Danh sách</small>
                 </h1>
             </div>
-            <!-- /.col-lg-12 -->
+        </div>
+        @if (Session::has('thongbao'))
+        <div class="row">
+            <div class="alert alert-warning">{{Session::get('thongbao')}}</div>
+        </div>
+        @endif
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
                     <tr align="center">
@@ -37,13 +43,13 @@
                         <td>{{$pro->new == 1? "Sản phẩm mới": ""}}</td>
                         <td><img src="resources/frontend/image/product/{{$pro->image}}" width="150" alt="{{$pro->name}}"></td>
                         <td style="max-width: 150px;">{{$pro->description}}</td>
-                        <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a href="#"> Delete</a></td>
-                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="#">Edit</a></td>
+                        <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a href="{{route('xoasanpham',$pro->id)}}"> Delete</a></td>
+                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{{route('editsanpham',$pro->id)}}">Edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-        </div>
+            {{$products->links()}}
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->

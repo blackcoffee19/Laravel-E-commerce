@@ -37,8 +37,27 @@ class AdminController extends Controller
         $customers = Customer::all();
         return view('admin.Customer.danhsachkh',compact('customers'));
     }
+    function getSuaKhachhang($id){
+        $customer = Customer::find($id);
+        return view('admin.Customer.suakhachhang',compact('customer'));
+    }
+    function postSuaKhachhang(Request $req,$id=null){
+        $customer = Customer::find($req->id);
+        $req->validate([
+            "address" => "required",
+            "phone" => "required|numeric"
+        ],[
+            "address.required" =>"Vui lòng nhập địa chỉ",
+            "phone.required" => "Vui lòng nhập số điện thoại",
+            "phone.numeric"=>"Số điện thoại không hợp lệ"
+        ]);
+        $customer->phone_number = $req["phone"];
+        $customer->address = $req["address"];
+        $customer->save();
+        return redirect()->back()->with('thongbao',"Cập nhật thành công");
+    }
     function getDanhsachSanpham(){
-        $products = Product::all();
+        $products = Product::paginate(5);
         return view('admin.Product.danhsachsanpham',compact('products'));
     }
     function getdsSlide(){
@@ -92,7 +111,6 @@ class AdminController extends Controller
             "namePro" => "required",
             "loaisp" => "required",
             "price" => "required|numeric|min:1000",
-            "pro_price" => "numeric",
             "unit"=> "required",
             "rdoStatus" => "required"
         ],[
@@ -101,7 +119,6 @@ class AdminController extends Controller
             "price.required"=>"Vui lòng nhập giá sản phẩm",
             "price.numeric"=>"Giá sản phẩm không có chuỗi ký tự",
             "price.min"=>"Giá phải lớn hơn 1000 đồng",
-            "pro_price.numeric"=>"Giá sản phẩm không có chuỗi ký tự",
             "unit.required"=>"Vui lòng nhập đơn vị tính",
             "rdoStatus.required"=>"Vui lòng chọn tình trạng sản phẩm"
         ]);
@@ -110,8 +127,7 @@ class AdminController extends Controller
         $pro->id_type  =$req["loaisp"];
         $pro->description = $req["des"];
         $pro->unit_price = $req["price"];
-        $pro->promotion_price = $req["pro_price"];
-        $pro->image = $req["fImages"];
+        $pro->promotion_price = $req["pro_price"] != null ? $req["pro_price"]: 0;
         $pro->unit = $req["unit"];
         $pro->new = $req["rdoStatus"];
         if($req->hasFile('fImages')){
@@ -132,5 +148,114 @@ class AdminController extends Controller
         };
         $pro->save();
         return redirect()->back()->with('thongbao','Thêm thành công');
+    }
+    function getSuaSanpham($id){
+        $product = Product::find($id);
+        $type_pro = ProductType::all();
+        return view('admin.Product.suasanpham',compact('product','type_pro'));
+    }
+    function postSuaSanpham(Request $req){
+        $req->validate([
+            "namePro"=>"required",
+            "loaisp"=>"required",
+            "price"=>"required|numeric|min:1000",
+            "unit"=>"required",
+        ],[
+            "namePro.required"=>"Vui lòng nhập tên sản phẩm",
+            "loaisp.required"=>"Vui lòng chọn loại sản phẩm",
+            "price.required"=>"Vui lòng thêm đơn giá",
+            "price.numeric"=>"Đơn giá không hợp lệ",
+            "price.min"=>"Đơn giá không nhỏ hơn 1000",
+            "unit.required"=>"Vui lòng nhập đơn vị tính",
+        ]);
+        $product = Product::find($req->id);
+        $product->name = $req["namePro"];
+        $product->id_type = $req["loaisp"];
+        $product->unit_price = $req["price"];
+        $product->promotion_price = $req["pro_price"] != null ? $req["pro_price"]: 0;
+        $product->description = $req["des"];
+        $product->unit = $req["unit"];
+        $product->new = $req["rdoStatus"];
+        if($req->hasFile('fImages')){
+            $file = $req->file('fImages');
+            $duoi = $file->getClientOriginalExtension();
+            if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
+                return redirect('admin/product/themsanpham')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+            }
+            $name=$file->getClientOriginalName();
+            $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/product/'.$hinh)){
+                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            };
+            $file->move('resources/frontend/image/product/',$hinh);
+            $product->image=$hinh;
+        }else{
+            $product->image = "";
+        };
+        $product->save();
+        return redirect()->back()->with('thongbao',"Sửa sản phẩm thành công");
+    }
+    function xoaSanPham($id){
+        $pro = Product::find($id);
+        $pro->delete();
+        return redirect()->back()->with('thongbao',"Xóa Sản phẩm thành công");
+    }
+    function getThemSlide(){
+        return view('admin.Slide.themslide');
+    }
+    function postThemSlide(Request $req){
+        $slide =  new Slide();
+        if($req->hasFile('fImages')){
+            $file = $req->file('fImages');
+            $duoi = $file->getClientOriginalExtension();
+            if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
+                return redirect('admin/product/themsanpham')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+            }
+            $name=$file->getClientOriginalName();
+            $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/product/'.$hinh)){
+                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            };
+            $file->move('resources/frontend/image/product/',$hinh);
+            $slide->image=$hinh;
+        }else{
+            return redirect('admin/product/themsanpham')->with('loi','Bạn phải thêm hình');
+        };
+        $slide->link = $req["link"] != null?$req["link"]:"";
+        $slide->save();
+        return redirect()->back()->with('thongbao','Thêm Silde Thành công');
+    }
+    function getSuaSlide($id){
+        $slide = Slide::find($id);
+        return view('admin.Slide.suaslide',compact('slide'));
+    }
+    function postSuaSlide (Request $req){
+        $slide = Slide::find($req->id);
+        if($req->hasFile('fImages')){
+            $file = $req->file('fImages');
+            $duoi = $file->getClientOriginalExtension();
+            if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
+                return redirect('admin/product/themsanpham')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+            }
+            $name=$file->getClientOriginalName();
+            $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/product/'.$hinh)){
+                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            };
+            $file->move('resources/frontend/image/product/',$hinh);
+            $slide->image=$hinh;
+        }else{
+            return redirect('admin/product/themsanpham')->with('loi','Bạn phải thêm hình');
+        };
+        $slide->link = $req["link"] != null?$req["link"]:"";
+        $slide->save();
+        return redirect()->back()->with('thongbao','Sửa Silde Thành công');
+    }
+    function getThemLoai(){
+        return view('admin.Type.themloai');
+    }
+    function postThemLoai(Request $req){
+
+        return view('admin.Type.themloai');
     }
 }

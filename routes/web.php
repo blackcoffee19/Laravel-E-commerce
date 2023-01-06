@@ -53,20 +53,40 @@ Route::group(["prefix"=>"admin",'middleware'=>'AdminLogin'],function(){
     });
     Route::group(['prefix'=>'customer'],function(){
         Route::get('/customerlist',[AdminController::class,'getDanhsachCustomer'])->name('customerlist');
+        Route::get('/editkhachhang/{id?}',[AdminController::class,'getSuaKhachhang'])->name('editkhachhang');
+        Route::post('/editkhachhang/{id?}',[AdminController::class,'postSuaKhachhang'])->name('editkhachhang');
     });
     Route::group(['prefix'=>'product'],function(){
         Route::get('/dssanpham',[AdminController::class,'getDanhsachSanpham'])->name('dssanpham');
         Route::get('/themsanpham',[AdminController::class,'getThemSanPham'])->name('themsanpham');
         Route::post('/themsanpham',[AdminController::class,'postThemSanPham'])->name('themsanpham');
+        Route::get('/editsanphan/{id?}',[AdminController::class,'getSuaSanpham'])->name('editsanpham');
+        Route::post('/editsanphan/{id?}',[AdminController::class,'postSuaSanpham'])->name('editsanpham');
+        Route::get('/xoasanpham/{id}',[AdminController::class,'xoaSanPham'])->name('xoasanpham');
     });
     Route::group(["prefix"=>"slide"],function(){
         Route::get('/dsslide',[AdminController::class,'getdsSlide'])->name('dsslide');
+        Route::get('/themslide',[AdminController::class,'getThemSlide'])->name('themslide');
+        Route::post('/themslide',[AdminController::class,'postThemSlide'])->name('themslide');
+        Route::get('/editSlide/{id?}',[AdminController::class,'getSuaSlide'])->name('editslide');
+        Route::post('/editSlide/{id?}',[AdminController::class,'postSuaSlide'])->name('editslide');
+        Route::get('/xoaslide/{id}',[AdminController::class,'xoaSlide'])->name('xoaslide');
     });
     Route::group(["prefix"=>"type"],function(){
         Route::get('/loaisanpham',[AdminController::class,'getLoaiSanpham'])->name('dsloai');
+        Route::get('/themloai',[AdminController::class,'getThemLoai'])->name('themloai');
+        Route::post('/themloai',[AdminController::class,'postThemLoai'])->name('themloai');
+        Route::get('/editloai/{id?}',[AdminController::class,'getSuaLoai'])->name('editloai');
+        Route::post('/editloai/{id?}',[AdminController::class,'postSuaLoai'])->name('editloai');
+        Route::get('/xoaloai/{id}',[AdminController::class,'xoaLoai'])->name('xoaloai');
     });
     Route::group(["prefix"=>"user"],function(){
         Route::get('/dsuser',[AdminController::class,'getdsuser'])->name('dsuser');
+        Route::get('/themuser',[AdminController::class,'getThemUser'])->name('themuser');
+        Route::post('/themuser',[AdminController::class,'postThemUser'])->name('themuser');
+        Route::get('/edituser/{id?}',[AdminController::class,'getSuaUser'])->name('edituser');
+        Route::post('/edituser/{id?}',[AdminController::class,'postSuaUser'])->name('edituser');
+        Route::get('/xoauser/{id}',[AdminController::class,'xoaUser'])->name('xoauser');
 
     });
 });

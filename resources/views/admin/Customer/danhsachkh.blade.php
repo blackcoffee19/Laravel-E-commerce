@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Người dùng
+                <h1 class="page-header">Khách hàng
                     <small>Danh sách</small>
                 </h1>
             </div>
@@ -32,7 +32,7 @@
                         <td>{{$customer->address}}</td>
                         <td>{{$customer->phone_number}}</td>
                         <td>{{count($customer->bill)}}</td>
-                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="#">Edit</a></td>
+                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{{route('editkhachhang',$customer->id)}}">Edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>
