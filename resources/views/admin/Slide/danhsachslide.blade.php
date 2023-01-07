@@ -8,6 +8,10 @@
                     <small>Danh sách</small>
                 </h1>
             </div>
+        </div>
+        @if (Session::has('thongbao'))
+            <p class="alert alert-warning">{{Session::get('thongbao')}}</p>
+        @endif
             <!-- /.col-lg-12 -->
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                 <thead>
@@ -25,8 +29,8 @@
                         <td>{{$slide->id}}</td>
                         <td><img src="resources/frontend/image/slide/{{$slide->image}}" width="150" alt="{{$slide->name}}"></td>
                         <td>{{$slide->link}}</td>
-                        <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a href="#"> Delete</a></td>
-                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="#">Edit</a></td>
+                        <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a href="{{route('xoaslide',$slide->id)}}"> Delete</a></td>
+                        <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{{route('editslide',$slide->id)}}">Edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>

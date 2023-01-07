@@ -209,18 +209,20 @@ class AdminController extends Controller
             $file = $req->file('fImages');
             $duoi = $file->getClientOriginalExtension();
             if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
-                return redirect('admin/product/themsanpham')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+                return redirect('admin/slide/themslide')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
             }
             $name=$file->getClientOriginalName();
-            $hinh = "hinhmoi".random_int(0,9)."_".$name;
-            while(file_exists('resources/frontend/image/product/'.$hinh)){
-                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            $hinh = "slide".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/slide/'.$hinh)){
+                $hinh = "slide".random_int(0,9)."_".$name;
             };
-            $file->move('resources/frontend/image/product/',$hinh);
+            $file->move('resources/frontend/image/slide/',$hinh);
             $slide->image=$hinh;
         }else{
-            return redirect('admin/product/themsanpham')->with('loi','Bạn phải thêm hình');
+            return redirect('admin/slide/themslide')->with('loi','Bạn phải thêm hình');
         };
+        $slide->updated_at= date("Y-m-d H:i:s");
+        $slide->created_at= date("Y-m-d H:i:s");
         $slide->link = $req["link"] != null?$req["link"]:"";
         $slide->save();
         return redirect()->back()->with('thongbao','Thêm Silde Thành công');
@@ -239,23 +241,155 @@ class AdminController extends Controller
             }
             $name=$file->getClientOriginalName();
             $hinh = "hinhmoi".random_int(0,9)."_".$name;
-            while(file_exists('resources/frontend/image/product/'.$hinh)){
+            while(file_exists('resources/frontend/image/slide/'.$hinh)){
                 $hinh = "hinhmoi".random_int(0,9)."_".$name;
             };
-            $file->move('resources/frontend/image/product/',$hinh);
+            $file->move('resources/frontend/image/slide/',$hinh);
             $slide->image=$hinh;
         }else{
             return redirect('admin/product/themsanpham')->with('loi','Bạn phải thêm hình');
         };
+        $slide->updated_at= date("Y-m-d H:i:s");
         $slide->link = $req["link"] != null?$req["link"]:"";
         $slide->save();
         return redirect()->back()->with('thongbao','Sửa Silde Thành công');
+    }
+    function xoaSlide($id){
+        $slide = Slide::find($id);
+        $slide->delete();
+        return redirect()->back()->with('thongbao','Xóa Silde Thành công');
     }
     function getThemLoai(){
         return view('admin.Type.themloai');
     }
     function postThemLoai(Request $req){
-
-        return view('admin.Type.themloai');
+        $req->validate([
+            "name"=>"required",
+            "des"=>"required",
+        ],[
+            "name.required"=>"Vui lòng nhập tên loại",
+            "des.required"=>"Vui lòng mô tả sản phẩm"
+        ]);
+        $type = new ProductType();
+        $type->name = $req['name'];
+        $type->description = $req['des'];
+        if($req->hasFile('fImages')){
+            $file = $req->file('fImages');
+            $duoi = $file->getClientOriginalExtension();
+            if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
+                return redirect('admin/type/themloai')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+            }
+            $name=$file->getClientOriginalName();
+            $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/product/'.$hinh)){
+                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            };
+            $file->move('resources/frontend/image/product/',$hinh);
+            $type->image=$hinh;
+        }else{
+            return redirect('admin/type/themloai')->with('loi','Bạn phải thêm hình');
+        };
+        $type->save();
+        return redirect()->back()->with('thongbao','Thêm loại sản phẩm thành công');
+    }
+    function getSuaLoai($id){
+        $type = ProductType::find($id);
+        return view('admin.Type.sualoai',compact('type'));
+    }
+    function postSuaLoai(Request $req){
+        $req->validate([
+            "name"=>"required",
+            "des"=>"required",
+        ],[
+            "name.required"=>"Vui lòng nhập tên loại",
+            "des.required"=>"Vui lòng mô tả sản phẩm"
+        ]);
+        $type = ProductType::find($req['id']);
+        $type->name = $req['name'];
+        $type->description = $req['des'];
+        if($req->hasFile('fImages')){
+            $file = $req->file('fImages');
+            $duoi = $file->getClientOriginalExtension();
+            if($duoi != 'jpg' && $duoi != 'png' && $duoi != 'jpeg' && $duoi != 'webp'){
+                return redirect('admin/type/editloai')->with('loi','Bạn chỉ được thêm file có đuôi jpg,png,jpeg,webp');
+            }
+            $name=$file->getClientOriginalName();
+            $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            while(file_exists('resources/frontend/image/product/'.$hinh)){
+                $hinh = "hinhmoi".random_int(0,9)."_".$name;
+            };
+            $file->move('resources/frontend/image/product/',$hinh);
+            $type->image=$hinh;
+        }else{
+            return redirect('admin/type/editloai')->with('loi','Bạn phải thêm hình');
+        };
+        $type->save();
+        return redirect()->back()->with('thongbao','Sửa loại sản phẩm thành công');
+    }
+    function getThemUser(){
+        return view('admin.User.themnguoidung');
+    }
+    function postThemUser(Request $req){
+        $req->validate([
+            "fullname" => "required",
+            "email" => "required|email",
+            "pass1" => "required|min:6",
+            "pass2" => "same:pass1",
+            "phone" => "required|numeric",
+            "address" => "required"
+        ],[
+            "fullname.required" => "Vui lòng nhập họ và tên người dùng",
+            "email.required" => "Vui lòng nhập email người dùng",
+            "pass1.required" => "Vui lòng nhập password",
+            "pass1.min" => "Mật khẩu phải nhiều hơn 6 chữ cái",
+            "pass2.same" => "Mật khẩu nhập lại không khớp",
+            "phone.required" => "Vui lòng nhập số điện thoại",
+            "phone.numeric" => "Số điện thoại không đúng",
+            "address.required" => "Vui lòng nhập địa chỉ người dùng"
+        ]);
+        $user = new User();
+        $user->full_name = $req['fullname'];
+        $user->email = $req['email'];
+        $user->password = $req['pass2'];
+        $user->phone = $req["phone"];
+        $user->address = $req["address"];
+        $user->save();
+        return redirect()->back()->with('thongbao','Thêm người dùng thành công');
+    }
+    function getSuaUser($id){
+        $user = User::find($id);
+        return view('admin.User.suanguoidung',compact('user'));
+    }
+    function postSuaUser(Request $req){
+        $req->validate([
+            "fullname" => "required",
+            "email" => "required|email",
+            "pass1" => "required|min:6",
+            "pass2" => "same:pass1",
+            "phone" => "required|numeric",
+            "address" => "required"
+        ],[
+            "fullname.required" => "Vui lòng nhập họ và tên người dùng",
+            "email.required" => "Vui lòng nhập email người dùng",
+            "pass1.required" => "Vui lòng nhập password",
+            "pass1.min" => "Mật khẩu phải nhiều hơn 6 chữ cái",
+            "pass2.same" => "Mật khẩu nhập lại không khớp",
+            "phone.required" => "Vui lòng nhập số điện thoại",
+            "phone.numeric" => "Số điện thoại không đúng",
+            "address.required" => "Vui lòng nhập địa chỉ người dùng"
+        ]);
+        $user = User::find($req->id);
+        $user->full_name = $req['fullname'];
+        $user->email = $req['email'];
+        $user->password = bcrypt($req['pass2']);
+        $user->phone = $req["phone"];
+        $user->address = $req["address"];
+        $user->save();
+        return redirect()->back()->with('thongbao','Sửa người dùng thành công');
+    }
+    function xoaUser($id){
+        $user = User::find($id);
+        $user->delete();
+        return redirect()->back()->with('thongbao',"Xóa người dùng thành công");
     }
 }

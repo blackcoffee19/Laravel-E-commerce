@@ -44,7 +44,6 @@ Route::post('/dangky',[PageController::class,'postDangKy'])->name('dangky');
 Route::get('/dangxuat',[PageController::class,'getDangXuat'])->name('dangxuat');
 Route::get('/timkiem',[PageController::class,'getTimKiem'])->name('timkiem');
 Route::group(["prefix"=>"admin",'middleware'=>'AdminLogin'],function(){
-
     Route::group(["prefix"=>"bills"],function(){
         Route::get("/list",[AdminController::class,'getDanhsachDonhang'])->name('billslist');
         Route::get("/edit/{id}",[AdminController::class,'suaDonHang'])->name('editdh');
@@ -78,12 +77,11 @@ Route::group(["prefix"=>"admin",'middleware'=>'AdminLogin'],function(){
         Route::post('/themloai',[AdminController::class,'postThemLoai'])->name('themloai');
         Route::get('/editloai/{id?}',[AdminController::class,'getSuaLoai'])->name('editloai');
         Route::post('/editloai/{id?}',[AdminController::class,'postSuaLoai'])->name('editloai');
-        Route::get('/xoaloai/{id}',[AdminController::class,'xoaLoai'])->name('xoaloai');
     });
     Route::group(["prefix"=>"user"],function(){
         Route::get('/dsuser',[AdminController::class,'getdsuser'])->name('dsuser');
         Route::get('/themuser',[AdminController::class,'getThemUser'])->name('themuser');
-        Route::post('/themuser',[AdminController::class,'postThemUser'])->name('themuser');
+        Route::post('/themuser',[AdminController::class,'postThemUser'])->name('');
         Route::get('/edituser/{id?}',[AdminController::class,'getSuaUser'])->name('edituser');
         Route::post('/edituser/{id?}',[AdminController::class,'postSuaUser'])->name('edituser');
         Route::get('/xoauser/{id}',[AdminController::class,'xoaUser'])->name('xoauser');

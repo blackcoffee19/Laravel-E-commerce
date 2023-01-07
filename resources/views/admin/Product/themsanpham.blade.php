@@ -53,7 +53,10 @@
                     </div>
                     <div class="form-group">
                         <label>Đơn vị tính</label>
-                        <input class="form-control" name="unit" placeholder="Nhập unit" />
+                        <select name="unit" id="unit">
+                            <option value="hộp">Hộp</option>
+                            <option value="cái">Cái</option>
+                        </select>
                         @if ($errors->has('unit'))
                         <span class="text-danger">{{$errors->first('unit')}}</span>
                         @endif

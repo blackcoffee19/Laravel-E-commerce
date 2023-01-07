@@ -53,10 +53,10 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{{route('thongtin')}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="{{route('thongtin')}}"><i class="fa fa-user fa-fw"></i> {{Auth::user()->full_name}}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="{{route('logout')}}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="{{route('logout')}}"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -81,7 +81,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="{{route('billslist')}}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="{{route('billslist')}}"><i class="fa fa-bar-chart-o fa-fw"></i>Đơn hàng<span class="fa arrow"></span></a>
@@ -119,10 +119,9 @@
                                     <a href="{{route('dsslide')}}">Danh sách Slide</a>
                                 </li>
                                 <li>
-                                    <a href="#">Thêm Slide</a>
+                                    <a href="{{route('themslide')}}">Thêm Slide</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="{{route('dsloai')}}"><i class="fa fa-cube fa-fw"></i> Loại sản phẩm<span class="fa arrow"></span></a>
@@ -131,10 +130,9 @@
                                     <a href="{{route('dsloai')}}">Danh sách Loại sản phẩm</a>
                                 </li>
                                 <li>
-                                    <a href="#">Thêm Loại sản phẩm</a>
+                                    <a href="{{route('themloai')}}">Thêm Loại sản phẩm</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="{{route('dsuser')}}}"><i class="fa fa-users fa-fw"></i> User<span class="fa arrow"></span></a>
@@ -143,7 +141,7 @@
                                     <a href="{{route('dsuser')}}">Danh sách User</a>
                                 </li>
                                 <li>
-                                    <a href="#">Thêm User</a>
+                                    <a href="{{route('themuser')}}">Thêm User</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
